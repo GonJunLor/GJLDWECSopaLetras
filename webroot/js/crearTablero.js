@@ -6,6 +6,11 @@ var tamTab = calcTamTablero(TAM_PALABRA_MAYOR,TOTAL_LETRAS_PALABARAS);
 document.writeln("Tamaño de tablero: " + tamTab + "*" + tamTab);
 var tablero = crearTablero(tamTab);
 
+var aDirecciones = [
+    [1,1,0,-1,-1,-1,0,1],
+    [0,1,1,1,0,-1,-1,-1]
+];
+
 dibujarTablero(tablero);
 recorrerPalabras()
 ;
@@ -43,8 +48,8 @@ function crearTablero(tamTablero) {
     for (let i = 0; i < tamTablero; i++) {
         celdas[i]=[];
         for (let j = 0; j < tamTablero; j++) {
-            //celdas[i][j] = j+","+i;
-            celdas[i][j] = 0;
+            celdas[i][j] = j+","+i;
+            // celdas[i][j] = 0;
         }
     }
     return celdas;
@@ -72,42 +77,7 @@ function posicionarPalabra(palabra) {
 
     /* comprobar que entra en la tabla con pos y direccion, en cada switch comprobamos 
     con restas con los bordes y la longitud de la palabra */
-    switch (direccion) {
-        case 0:
-            
-            break;
-    
-        case 1:
-            
-            break;
-    
-        case 2:
-            
-            break;
-    
-        case 3:
-            
-            break;
-    
-        case 4:
-            
-            break;
-    
-        case 5:
-            
-            break;
-    
-        case 6:
-            
-            break;
-    
-        case 7:
-            
-            break;
-    
-        default:
-            break;
-    }
+    encajaPalabra(direccion, palabra, posi, posj);
 
     /* si entra la palabra seguimos, sino que vuelva a hacer otra dirección pero no aleatoria
     sino que coga la siguiente. Puede haber lio cuando llegamos a la dirección 7 ya que luego 
@@ -131,5 +101,26 @@ function dibujarTablero(celdas) {
     document.writeln("</table>")
 }
 function posicionAleatoria(tamTablero){
+
     return parseInt(Math.random()*tamTablero);
+}
+function encajaPalabra(direccion, palabra, posX, posY) {
+    console.log("posicion: " + posX + "-" + posY)
+    console.log("direccion: " + direccion)
+    let valido = true;
+    // poner en los if de abajo lo de huecos...
+    let huecosHastaBorde = Math.min(
+        aDirecciones[0][direccion]==0?(tamTab*aDirecciones[1][direccion]-posY):(tamTab*aDirecciones[0][direccion]-posX)
+        ,
+        aDirecciones[1][direccion]==0?(tamTab*aDirecciones[0][direccion]-posX):(tamTab*aDirecciones[1][direccion]-posY)
+    );
+    if (aDirecciones[0][direccion]==0) {
+        
+    } else if(aDirecciones[0][direccion]==-1){
+
+    } else {
+
+    }
+    console.log(huecosHastaBorde);
+    return valido;
 }
