@@ -2,7 +2,7 @@ var palabras = ["perro", "gato", "loro", "guacamayo"];
 const TAM_PALABRA_MAYOR = palabramasLarga(palabras);
 const TOTAL_LETRAS_PALABARAS = cantidadLetras(palabras);
 
-var tamTab = calcTamTablero(TAM_PALABRA_MAYOR,TOTAL_LETRAS_PALABARAS)+2;
+var tamTab = calcTamTablero(TAM_PALABRA_MAYOR,TOTAL_LETRAS_PALABARAS);
 document.writeln("Tamaño de tablero: " + tamTab + "*" + tamTab);
 var tablero = crearTablero(tamTab);
 
@@ -58,105 +58,73 @@ function recorrerPalabras() {
     // ordenar palabras para empezar con la más larga
     palabras.sort((a,b)=>b.length-a.length);
     for (const p of palabras) {
-        let siguientePalabra = false;
-        let contador = tamTab+100;
-        do {
-            siguientePalabra = posicionarPalabra(p);
-            console.log("Palabra puesta: " + siguientePalabra)
-            contador--;
-        } while (!siguientePalabra && contador>0);
+        posicionarPalabra(p);
     }
 }
 function posicionarPalabra(palabra) {
     let longitudPalabra = palabra.length;
     let aPalabra = Array.from(palabra);
-    console.log("Intento de poner: " + aPalabra);
-    let encajo = true;
     //console.log(aPalabra);
     
     // número aleatorio para posición i y j: 0-(tamTablero-1)
     let posi = posicionAleatoria(tamTab);
     let posj = posicionAleatoria(tamTab);
-    let inicialPosi = posi;
-    let inicialPosj = posj;
     //console.log(posi+","+posj);
 
     let salir = false;
     let controlDireccion = -1;
     let direccion;
-    //do {
+    do {
 
         // Para controlar que direccion usamos, la primera vez pone una aleatoria pero 
         // luego usa la siguiente hasta probar todas.
-        for (let i = 0; i < 8 && !salir; i++) {
-            if (controlDireccion == -1) {
-                // número aleatorio 0-7 para direcciones
-                direccion = posicionAleatoria(8);
-                controlDireccion = direccion;
-            } else {
-                direccion++;
-                if (direccion==8) {
-                    direccion=0;
-                }
+        if (controlDireccion == -1) {
+            // número aleatorio 0-7 para direcciones
+            direccion = posicionAleatoria(8);
+            controlDireccion = direccion;
+        } else {
+            direccion++;
+            if (direccion==7) {
+                direccion=0;
+            } else if(controlDireccion==direccion){
+                salir = true;
             }
-            //console.log("Direccion: " + direccion);
+        }
 
-            if (!salir) {
-                /* comprobar que entra en la tabla con pos y direccion, en cada switch comprobamos 
-                con restas con los bordes y la longitud de la palabra */
-                //encajaPalabra(direccion, palabra, posi, posj);
+        if (!salir) {
+            /* comprobar que entra en la tabla con pos y direccion, en cada switch comprobamos 
+            con restas con los bordes y la longitud de la palabra */
+            //encajaPalabra(direccion, palabra, posi, posj);
 
-                /* si entra la palabra seguimos, sino que vuelva a hacer otra dirección pero no aleatoria
-                sino que coga la siguiente. Puede haber lio cuando llegamos a la dirección 7 ya que luego 
-                empieza por la 0 */
+            /* si entra la palabra seguimos, sino que vuelva a hacer otra dirección pero no aleatoria
+            sino que coga la siguiente. Puede haber lio cuando llegamos a la dirección 7 ya que luego 
+            empieza por la 0 */
 
-                /* comprobar que podemos poner la palabra mirando celda por celda si esta vacia o si hay algo 
-                pero encaja con nuestras letras, en cuanto no encaje una letra salimos a buscar otra dirección */
-                try {
-                    
-                    for (const caracter of aPalabra) {
-                        let carTablero = tablero[posi][posj];
-                        if(posi>=0 && posi<tamTab && posj>=0 && posj<tamTab){
-                            if (caracter!=carTablero && carTablero!=0) {
-                                encajo=false;
-                                //break;
-                            }
-                            posi+=aDirecciones[0][direccion];
-                            posj+=aDirecciones[1][direccion];
-                            console.log("Direccion: " + direccion + " pos: " + posi + "," + posj);
-                        } else {
-                            salir=true;
-                        }
-                         
+            /* comprobar que podemos poner la palabra mirando celda por celda si esta vacia o si hay algo 
+            pero encaja con nuestras letras, en cuanto no encaje una letra salimos a buscar otra dirección */
+            try {
+                for (const caracter of aPalabra) {
+                    let carTablero = tablero[posi][posj];
+                    if (carTablero == 0) {
+                        tablero[posi][posj]=caracter;
+                        console.log(carTablero)
+                    } else if (caracter!=carTablero) {
+
                     }
-                    
-                    salir=true;
-                    //console.log("Direccion: " + direccion + " pos: " + posi + "," + posj)
-
-                } catch (error) {
-                    encajo=false;
+                    posi+=aDirecciones[0][direccion];
+                    posi+=aDirecciones[1][direccion];
+                    console.log(posi + "," + posj);
                 }
+                salir=true;
+            } catch (error) {
                 //salir=true;
-                /* si no hemos conseguido encajar en todas las direcciones buscamos nueva posición */
             }
-            if (i=8) {
-                encajo=false;
-            }
+            //salir=true;
+            /* si no hemos conseguido encajar en todas las direcciones buscamos nueva posición */
         }
 
-        if (encajo) {
-            let posi = inicialPosi;
-            let posj = inicialPosj;
-            for (const caracter of aPalabra) {
-                //console.log("Caracter de la palabra: "+caracter);
-                tablero[posi][posj] = caracter;
-                posi+=aDirecciones[0][direccion];
-                posi+=aDirecciones[1][direccion];
-                //console.log(posi + "," + posj);
-            }
-        }
-    //} while (!salir);
-    return encajo;
+    } while (!salir);
+    
 
 
     
