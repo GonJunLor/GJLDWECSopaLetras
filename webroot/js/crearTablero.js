@@ -1,4 +1,4 @@
-var palabras = ["perro", "gato", "loro", "guacamayo"];
+var palabras = ["perro", "gato", "loro", "guacamayo", "col", "sal", "agua", "lapicero","balon"];
 const TAM_PALABRA_MAYOR = palabramasLarga(palabras);
 const TOTAL_LETRAS_PALABARAS = cantidadLetras(palabras);
 
@@ -13,6 +13,8 @@ var aDirecciones = [
 
 //dibujarTablero(tablero);
 recorrerPalabras();
+//dibujarTablero(tablero);
+document.writeln("<br>")
 rellenarTablero();
 dibujarTablero(tablero);
 function palabramasLarga(array) {
@@ -199,11 +201,22 @@ function posicionAleatoria(tamTablero){
     return parseInt(Math.random()*tamTablero);
 }
 function rellenarTablero() {
+    const vocales = ["a", "e", "i", "o", "u"];
+    const consonantes = [
+        "b", "c", "d", "f", "g", "h", "j", "k", "l", "m",
+        "n", "ñ", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z"
+    ];
+
     for (let i = 0; i < tamTab; i++) {
         for (let j = 0; j < tamTab; j++) {
             if (tablero[i][j]==0) {
-                // cambiar para rellenar con letras y no con números
-                tablero[i][j]=posicionAleatoria(50);
+                // rellenamos con letras al azar con 30% vocales y 70% consonantes
+                let aleatorio = Math.random();
+                if (aleatorio < 0.7) {
+                    tablero[i][j] = consonantes[parseInt(Math.random() * consonantes.length)].toLowerCase();
+                } else {
+                    tablero[i][j] = vocales[parseInt(Math.random() * vocales.length)].toLowerCase();
+                }
             }
         }
     }
