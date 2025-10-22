@@ -1,4 +1,4 @@
-var palabras = ["perro", "gato", "loro", "guacamayo", "col", "sal", "agua", "lapicero","balon"];
+var palabras = ["perro", "gato", "loro", "guacamayo", "col", "sal", "agua", "lapicero","balon","pizarra"];
 const TAM_PALABRA_MAYOR = palabramasLarga(palabras);
 const TOTAL_LETRAS_PALABARAS = cantidadLetras(palabras);
 
