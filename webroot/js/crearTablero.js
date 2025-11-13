@@ -3,7 +3,21 @@ const TAM_PALABRA_MAYOR = palabramasLarga(palabras);
 const TOTAL_LETRAS_PALABARAS = cantidadLetras(palabras);
 
 var tamTab = calcTamTablero(TAM_PALABRA_MAYOR,TOTAL_LETRAS_PALABARAS);
-document.writeln("Tamaño de tablero: " + tamTab + "*" + tamTab);
+
+// 1. Obtener el elemento <main>
+var main = document.getElementsByTagName("main")[0];
+
+// 2. Crear el elemento <h2> para la información
+const infoElement = document.createElement("h2");
+main.appendChild(infoElement);
+
+// 3. Crear el <div> contenedor del tablero
+const tableroContainer = document.createElement("div");
+tableroContainer.id = "tablero-container"; // Opcional: darle un ID
+main.appendChild(tableroContainer);
+
+infoElement.innerHTML = "Tamaño de tablero: " + tamTab + "*" + tamTab;
+
 var tablero = crearTablero(tamTab);
 
 var aDirecciones = [
@@ -14,7 +28,7 @@ var aDirecciones = [
 //dibujarTablero(tablero);
 recorrerPalabras();
 //dibujarTablero(tablero);
-document.writeln("<br>")
+document.writeln("<br>");
 rellenarTablero();
 dibujarTablero(tablero);
 function palabramasLarga(array) {
@@ -177,10 +191,8 @@ function posicionarPalabra(palabra) {
     // Devolvemos true para indicar que si se ha guardado la palabra y false para no
     return encajo;
 
-
-    
 }
-function dibujarTablero(celdas) {
+function dibujarTableroWrite(celdas) {
     document.writeln("<table>")
     for (let i = 0; i < celdas.length; i++) {
         document.writeln("<tr>")
@@ -195,6 +207,26 @@ function dibujarTablero(celdas) {
         document.writeln("<tr>")
     }
     document.writeln("</table>")
+}
+
+function dibujarTablero(celdas) {
+    let htmlTabla = "<table>"; // Inicia la cadena HTML
+
+    for (let i = 0; i < celdas.length; i++) {
+        htmlTabla += "<tr>";
+        for (let j = 0; j < celdas.length; j++) {
+            if (celdas[i][j] == 0) {
+                htmlTabla += "<td>" + celdas[i][j] + "</td>";
+            } else {
+                // Usas la clase 'verde' para las palabras
+                htmlTabla += "<td class='verde'>" + celdas[i][j] + "</td>";
+            }
+        }
+        htmlTabla += "</tr>"; // Corregido: cierra <tr>, no crea otro <tr>
+    }
+    htmlTabla += "</table>"; // Cierra la tabla
+
+    tableroContainer.innerHTML = htmlTabla;
 }
 function posicionAleatoria(tamTablero){
 

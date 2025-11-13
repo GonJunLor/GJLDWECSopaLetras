@@ -71,11 +71,6 @@ h1{
     margin-bottom: 10%;
     width: 13em;
 }
-main>h3{
-    text-align: center;
-    padding: 1em;
-    margin-top: 2em;
-}
 
 /* Main con el tablero */
 table{border-collapse: collapse;}
