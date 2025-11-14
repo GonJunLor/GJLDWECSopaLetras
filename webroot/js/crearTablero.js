@@ -4,17 +4,25 @@ const TOTAL_LETRAS_PALABARAS = cantidadLetras(palabras);
 
 var tamTab = calcTamTablero(TAM_PALABRA_MAYOR,TOTAL_LETRAS_PALABARAS);
 
-// 1. Obtener el elemento <main>
+// Obtener el elemento <main>
 var main = document.getElementsByTagName("main")[0];
 
-// 2. Crear el elemento <h2> para la información
+// Crear el elemento <h2> para la información
 const infoElement = document.createElement("h2");
 main.appendChild(infoElement);
 
-// 3. Crear el <div> contenedor del tablero
+// Crear el <div> contenedor del tablero
 const tableroContainer = document.createElement("div");
-tableroContainer.id = "tablero-container"; // Opcional: darle un ID
+tableroContainer.id = "tablero"; // Opcional: darle un ID
 main.appendChild(tableroContainer);
+
+// Crear elemento para palabras a buscar
+const caja = document.createElement("div");
+caja.id = "palabrasBuscar";
+main.appendChild(caja);
+
+
+
 
 infoElement.innerHTML = "Tamaño de tablero: " + tamTab + "*" + tamTab;
 
@@ -31,6 +39,16 @@ recorrerPalabras();
 document.writeln("<br>");
 rellenarTablero();
 dibujarTablero(tablero);
+mostrarPalabras();
+
+function mostrarPalabras(params) {
+
+    for (const p of palabras) {
+        caja.innerHTML +=  "<p>"+p+"</p>" ;
+    }
+   
+}
+
 function palabramasLarga(array) {
     let palabraLarga = 0;
     for (const e of array) {
