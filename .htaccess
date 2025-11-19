@@ -1,5 +1,5 @@
 # Redirección a indice personalizado
-directoryindex indexProyectoCIB.php
+directoryindex indexSopaLetras.html
 
 # Para que fuincione el metodo head('WWW-Authenticate: Basic realm="Contenido restringido"') en php
 RewriteEngine On
