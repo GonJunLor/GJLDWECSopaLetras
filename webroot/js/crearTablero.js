@@ -21,7 +21,10 @@ const caja = document.createElement("div");
 caja.id = "palabrasBuscar";
 main.appendChild(caja);
 
-
+// variables para control de selección
+var origenX;
+var origenY;
+var palabra;
 
 
 infoElement.innerHTML = "Tamaño de tablero: " + tamTab + "*" + tamTab;
@@ -227,24 +230,25 @@ function dibujarTableroWrite(celdas) {
     document.writeln("</table>")
 }
 
+// crear todos los elementos con create no con ""
 function dibujarTablero(celdas) {
-    let htmlTabla = "<table>"; // Inicia la cadena HTML
+
+    let tabla = document.createElement("table")
 
     for (let i = 0; i < celdas.length; i++) {
-        htmlTabla += "<tr>";
+        let fila = document.createElement("tr");
         for (let j = 0; j < celdas.length; j++) {
-            if (celdas[i][j] == 0) {
-                htmlTabla += "<td>" + celdas[i][j] + "</td>";
-            } else {
-                // Usas la clase 'verde' para las palabras
-                htmlTabla += "<td class='verde'>" + celdas[i][j] + "</td>";
-            }
+            let celda = document.createElement("td");
+            celda.innerHTML = celdas[i][j];
+            celda.id = i+","+j;
+            celda.addEventListener("mousedown",pulsarCelda);
+            celda.addEventListener("mouseup",soltarCelda);
+            fila.append(celda);
         }
-        htmlTabla += "</tr>"; // Corregido: cierra <tr>, no crea otro <tr>
+        tabla.append(fila);
     }
-    htmlTabla += "</table>"; // Cierra la tabla
 
-    tableroContainer.innerHTML = htmlTabla;
+    tableroContainer.append(tabla);
 }
 function posicionAleatoria(tamTablero){
 
@@ -270,4 +274,42 @@ function rellenarTablero() {
             }
         }
     }
+}
+
+function pulsarCelda(ev) {
+    let coordenadas = ev.target.id
+    
+    let letras = coordenadas.split(",");
+    
+    origenX = letras[0];
+    origenY = letras[1];
+}
+
+function soltarCelda(ev){
+
+    let coordenadas = ev.target.id
+    
+    let letras = coordenadas.split(",");
+    
+    let destinoX = letras[0];
+    let destinoY = letras[1];
+
+    if(validarDireccion(origenX, origenY, destinoX, destinoY)){
+        // dirección válida
+    } else {
+        // dirección inválida
+    }
+
+}
+
+function validarDireccion(x1, y1, x2, y2){
+    let ok = false;
+
+    if (ok) {
+        
+    } else {
+        ok = false
+    }
+
+    return ok;
 }
