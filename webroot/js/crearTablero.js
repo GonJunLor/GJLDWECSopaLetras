@@ -296,8 +296,12 @@ function soltarCelda(ev){
 
     if(validarDireccion(origenX, origenY, destinoX, destinoY)){
         // dirección válida
+        console.log("direccion válida");
+        pintarCeldas(origenX, origenY, destinoX, destinoY);
+
     } else {
         // dirección inválida
+        console.log("direccion NO válida");
     }
 
 }
@@ -305,11 +309,53 @@ function soltarCelda(ev){
 function validarDireccion(x1, y1, x2, y2){
     let ok = false;
 
-    if (ok) {
-        
-    } else {
-        ok = false
+    if (x1==x2 || y1==y2 || Math.abs(x1-x2)==Math.abs(y1-y2)) {
+        ok=true;
     }
 
     return ok;
+}
+
+function pintarCeldas(x1, y1, x2, y2, color="seleccionado"){
+    
+    let palabra = "";
+    
+    // control del incremento de x e y según la dirección
+    let incrementoX = 0;
+    let incrementoY = 0;
+    if (x2>x1) {
+        incrementoX = 1;
+    } else if (x2<x1) {
+        incrementoX = -1;
+    }
+    if (y2>y1) {
+        incrementoY = 1;
+    } else if (y2<y1) {
+        incrementoY = -1;
+    }
+
+    let controlX = x1;
+    let controlY = y1;
+    while (controlX!=x2 || controlY!=y2){
+        console.log("x1="+x1+", y1="+y1+", x2="+x2+", y2="+y2)
+        console.log("controlX="+controlX+" ,controlY="+controlY);
+        controlX = parseInt(controlX,10); // para quitar 0 a la izquierda
+        controlY = parseInt(controlY,10);
+        console.log(controlX+","+controlY);
+        console.log("Incrementos: "+incrementoX+","+incrementoY);
+
+        let celda = document.getElementById(controlX+","+controlY);
+        celda.classList.add(color);
+        palabra += celda.textContent;
+        console.log(celda);
+
+        controlX += incrementoX;
+        controlY += incrementoY;
+    }
+    let celda = document.getElementById(x2+","+y2);
+    palabra += celda.textContent;
+    celda.classList.add(color);
+
+    console.log(palabra);
+    return palabra;
 }
