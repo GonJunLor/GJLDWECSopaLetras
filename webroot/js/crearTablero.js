@@ -281,8 +281,10 @@ function pulsarCelda(ev) {
     
     let letras = coordenadas.split(",");
     
-    origenX = letras[0];
-    origenY = letras[1];
+    origenX = parseInt(letras[0],10);
+    origenY = parseInt(letras[1],10);
+
+    // en algun momento devolver un array con las posiciones iniciales
 }
 
 function soltarCelda(ev){
@@ -291,13 +293,28 @@ function soltarCelda(ev){
     
     let letras = coordenadas.split(",");
     
-    let destinoX = letras[0];
-    let destinoY = letras[1];
+    let destinoX =parseInt(letras[0],10);
+    let destinoY = parseInt(letras[1],10);
 
+    // en algun momento devolver un array con las posiciones destino en esta funcion y hacer esto fuera
     if(validarDireccion(origenX, origenY, destinoX, destinoY)){
         // dirección válida
         console.log("direccion válida");
-        pintarCeldas(origenX, origenY, destinoX, destinoY);
+        let palabra = pintarCeldas(origenX, origenY, destinoX, destinoY);
+        if(comprobarPalabra(palabra, palabras)){
+            // la palabra esta en la sopa de letras
+            console.log("encontrado")
+            pintarCeldas(origenX, origenY, destinoX, destinoY, "encontrado")
+        } else {
+            // la palabra no esta en la sopa de letras
+            console.log("NO encontrado")
+            pintarCeldas(origenX, origenY, destinoX, destinoY, "erroneo")
+            setTimeout(() => {
+                // La función se ejecuta SÓLO después de 1000 ms
+                pintarCeldas(origenX, origenY, destinoX, destinoY, "blanco")
+            }, 1000);
+            
+        }
 
     } else {
         // dirección inválida
@@ -337,25 +354,42 @@ function pintarCeldas(x1, y1, x2, y2, color="seleccionado"){
     let controlX = x1;
     let controlY = y1;
     while (controlX!=x2 || controlY!=y2){
-        console.log("x1="+x1+", y1="+y1+", x2="+x2+", y2="+y2)
-        console.log("controlX="+controlX+" ,controlY="+controlY);
-        controlX = parseInt(controlX,10); // para quitar 0 a la izquierda
-        controlY = parseInt(controlY,10);
-        console.log(controlX+","+controlY);
-        console.log("Incrementos: "+incrementoX+","+incrementoY);
+        // console.log("x1="+x1+", y1="+y1+", x2="+x2+", y2="+y2)
+        // console.log("controlX="+controlX+" ,controlY="+controlY);
+
+        // console.log(controlX+","+controlY);
+        // console.log("Incrementos: "+incrementoX+","+incrementoY);
 
         let celda = document.getElementById(controlX+","+controlY);
+        celda.classList.remove("seleccionado");
+        celda.classList.remove("erroneo");
+        celda.classList.remove("blanco");
         celda.classList.add(color);
         palabra += celda.textContent;
-        console.log(celda);
+        // console.log(celda);
 
         controlX += incrementoX;
         controlY += incrementoY;
     }
     let celda = document.getElementById(x2+","+y2);
     palabra += celda.textContent;
+    celda.classList.remove("seleccionado");
+    celda.classList.remove("erroneo");
+    celda.classList.remove("blanco");
     celda.classList.add(color);
 
     console.log(palabra);
     return palabra;
+}
+
+function comprobarPalabra(pal, pals) {
+    let salida = false;
+    for (const p of pals) {
+        if (p==pal) {
+            salida = true;
+        }
+        
+        console.log(p + " == " + pal + " = " + salida)
+    }
+    return salida;
 }

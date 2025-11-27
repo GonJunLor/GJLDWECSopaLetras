@@ -94,6 +94,9 @@ h1{
 }
 .verde{background-color: rgb(231, 247, 207);}
 .seleccionado{background-color: yellow;}
+.erroneo{background-color: red;}
+.encontrado{background-color: green;}
+.blanco{background-color: transparent;}
 
 /*  */
 
