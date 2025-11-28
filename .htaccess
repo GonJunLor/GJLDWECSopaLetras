@@ -1,10 +1,6 @@
 # Redirección a indice personalizado
 directoryindex indexSopaLetras.html
 
-# Para que fuincione el metodo head('WWW-Authenticate: Basic realm="Contenido restringido"') en php
-RewriteEngine On
-RewriteCond %{HTTP:Authorization} ^(.*)
-RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
 
 # Redirección de errores a paginas personalizadas
 ErrorDocument 404 /error/404.html

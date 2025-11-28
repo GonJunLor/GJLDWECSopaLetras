@@ -25,7 +25,7 @@ main.appendChild(caja);
 var origenX;
 var origenY;
 var palabra;
-
+var tableroBloqueado = false;
 
 infoElement.innerHTML = "Tamaño de tablero: " + tamTab + "*" + tamTab;
 
@@ -277,6 +277,11 @@ function rellenarTablero() {
 }
 
 function pulsarCelda(ev) {
+    // Comprobación de bloqueo
+    if (tableroBloqueado) {
+        return; // Salir inmediatamente si el tablero está bloqueado
+    }
+
     let coordenadas = ev.target.id
     
     let letras = coordenadas.split(",");
@@ -288,6 +293,10 @@ function pulsarCelda(ev) {
 }
 
 function soltarCelda(ev){
+    // Comprobación de bloqueo
+    if (tableroBloqueado) {
+        return; // Salir inmediatamente si el tablero está bloqueado
+    }
 
     let coordenadas = ev.target.id
     
@@ -305,13 +314,20 @@ function soltarCelda(ev){
             // la palabra esta en la sopa de letras
             console.log("encontrado")
             pintarCeldas(origenX, origenY, destinoX, destinoY, "encontrado")
+            tacharPalabra(palabra);
         } else {
             // la palabra no esta en la sopa de letras
             console.log("NO encontrado")
             pintarCeldas(origenX, origenY, destinoX, destinoY, "erroneo")
-            setTimeout(() => {
+
+            // Bloquear el tablero antes del setTimeout
+            tableroBloqueado = true;
+            espera = setTimeout(() => {
                 // La función se ejecuta SÓLO después de 1000 ms
                 pintarCeldas(origenX, origenY, destinoX, destinoY, "blanco")
+
+                // Desbloquear el tablero cuando el setTimeout termina
+                tableroBloqueado = false;
             }, 1000);
             
         }
@@ -392,4 +408,8 @@ function comprobarPalabra(pal, pals) {
         console.log(p + " == " + pal + " = " + salida)
     }
     return salida;
+}
+
+function tacharPalabra(p){
+
 }
