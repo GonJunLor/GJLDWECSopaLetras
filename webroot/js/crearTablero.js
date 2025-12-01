@@ -21,8 +21,14 @@ const caja = document.createElement("div");
 caja.id = "palabrasBuscar";
 main.appendChild(caja);
 
-
-
+// variables para control de selección
+var origenX;
+var origenY;
+var palabra;
+var tableroBloqueado = false;
+var ratonPulsado = false;
+var anteriorX = 0; 
+var anteriorY = 0;
 
 infoElement.innerHTML = "Tamaño de tablero: " + tamTab + "*" + tamTab;
 
@@ -41,12 +47,15 @@ rellenarTablero();
 dibujarTablero(tablero);
 mostrarPalabras();
 
-function mostrarPalabras(params) {
+function mostrarPalabras() {
 
     for (const p of palabras) {
-        caja.innerHTML +=  "<p>"+p+"</p>" ;
+        const parrafo = document.createElement("p");
+        parrafo.innerHTML = p;
+
+        caja.appendChild(parrafo);
     }
-   
+
 }
 
 function palabramasLarga(array) {
@@ -227,24 +236,27 @@ function dibujarTableroWrite(celdas) {
     document.writeln("</table>")
 }
 
+// crear todos los elementos con create no con ""
 function dibujarTablero(celdas) {
-    let htmlTabla = "<table>"; // Inicia la cadena HTML
+
+    let tabla = document.createElement("table")
 
     for (let i = 0; i < celdas.length; i++) {
-        htmlTabla += "<tr>";
+        let fila = document.createElement("tr");
         for (let j = 0; j < celdas.length; j++) {
-            if (celdas[i][j] == 0) {
-                htmlTabla += "<td>" + celdas[i][j] + "</td>";
-            } else {
-                // Usas la clase 'verde' para las palabras
-                htmlTabla += "<td class='verde'>" + celdas[i][j] + "</td>";
-            }
+            let celda = document.createElement("td");
+            celda.innerHTML = celdas[i][j];
+            celda.id = i+","+j;
+            celda.addEventListener("mousedown", pulsarCelda);
+            celda.addEventListener("mouseup", soltarCelda);
+            celda.addEventListener("mouseenter", entrarRatonEnCelda);
+            celda.addEventListener("mouseleave", salirRatonDeCelda);
+            fila.append(celda);
         }
-        htmlTabla += "</tr>"; // Corregido: cierra <tr>, no crea otro <tr>
+        tabla.append(fila);
     }
-    htmlTabla += "</table>"; // Cierra la tabla
 
-    tableroContainer.innerHTML = htmlTabla;
+    tableroContainer.append(tabla);
 }
 function posicionAleatoria(tamTablero){
 
@@ -269,5 +281,194 @@ function rellenarTablero() {
                 }
             }
         }
+    }
+}
+
+function pulsarCelda(ev) {
+    // Comprobación de bloqueo
+    if (tableroBloqueado) {
+        return; // Salir inmediatamente si el tablero está bloqueado
+    }
+
+    let coordenadas = ev.target.id
+    
+    let letras = coordenadas.split(",");
+    
+    origenX = parseInt(letras[0],10);
+    origenY = parseInt(letras[1],10);
+
+    ratonPulsado = true;
+
+    // en algun momento devolver un array con las posiciones iniciales
+}
+
+function entrarRatonEnCelda(ev){
+    // Comprobación de bloqueo
+    if (tableroBloqueado) {
+        return; // Salir inmediatamente si el tablero está bloqueado
+    }
+
+    if (ratonPulsado) {
+        let coordenadas = ev.target.id
+    
+        let letras = coordenadas.split(",");
+        
+        moverX = parseInt(letras[0],10);
+        moverY = parseInt(letras[1],10);
+
+        console.log(moverX + "-" + moverY);
+
+        if(validarDireccion(origenX, origenY, moverX, moverY)){
+            anteriorX = moverX;
+            anteriorY = moverY;
+            pintarCeldas(origenX, origenY, moverX, moverY)
+        }
+    }
+
+}
+
+function salirRatonDeCelda(ev) {
+    // Comprobación de bloqueo
+    if (tableroBloqueado) {
+        return; // Salir inmediatamente si el tablero está bloqueado
+    }
+    if (ratonPulsado) {
+        pintarCeldas(origenX, origenY, anteriorX, anteriorY, "blanco");
+    }
+}
+
+function soltarCelda(ev){
+    ratonPulsado = false;
+
+    // Comprobación de bloqueo
+    if (tableroBloqueado) {
+        return; // Salir inmediatamente si el tablero está bloqueado
+    }
+
+    let coordenadas = ev.target.id
+    
+    let letras = coordenadas.split(",");
+    
+    let destinoX =parseInt(letras[0],10);
+    let destinoY = parseInt(letras[1],10);
+
+    // en algun momento devolver un array con las posiciones destino en esta funcion y hacer esto fuera
+    if(validarDireccion(origenX, origenY, destinoX, destinoY)){
+        // dirección válida
+        console.log("direccion válida");
+        let palabra = pintarCeldas(origenX, origenY, destinoX, destinoY);
+        if(comprobarPalabra(palabra, palabras)){
+            // la palabra esta en la sopa de letras
+            console.log("encontrado")
+            pintarCeldas(origenX, origenY, destinoX, destinoY, "encontrado")
+            tacharPalabra(palabra);
+        } else {
+            // la palabra no esta en la sopa de letras
+            console.log("NO encontrado")
+            pintarCeldas(origenX, origenY, destinoX, destinoY, "erroneo")
+
+            // Bloquear el tablero antes del setTimeout
+            tableroBloqueado = true;
+            espera = setTimeout(() => {
+                // La función se ejecuta SÓLO después de 1000 ms
+                pintarCeldas(origenX, origenY, destinoX, destinoY, "blanco")
+
+                // Desbloquear el tablero cuando el setTimeout termina
+                tableroBloqueado = false;
+            }, 1000);
+            
+        }
+
+    } else {
+        // dirección inválida
+        console.log("direccion NO válida");
+    }
+
+    
+}
+
+function validarDireccion(x1, y1, x2, y2){
+    let ok = false;
+
+    if (x1==x2 || y1==y2 || Math.abs(x1-x2)==Math.abs(y1-y2)) {
+        ok=true;
+    }
+
+    return ok;
+}
+
+function pintarCeldas(x1, y1, x2, y2, color="seleccionado"){
+    
+    let palabra = "";
+    
+    // control del incremento de x e y según la dirección
+    let incrementoX = 0;
+    let incrementoY = 0;
+    if (x2>x1) {
+        incrementoX = 1;
+    } else if (x2<x1) {
+        incrementoX = -1;
+    }
+    if (y2>y1) {
+        incrementoY = 1;
+    } else if (y2<y1) {
+        incrementoY = -1;
+    }
+
+    let controlX = x1;
+    let controlY = y1;
+    while (controlX!=x2 || controlY!=y2){
+        // console.log("x1="+x1+", y1="+y1+", x2="+x2+", y2="+y2)
+        // console.log("controlX="+controlX+" ,controlY="+controlY);
+
+        // console.log(controlX+","+controlY);
+        // console.log("Incrementos: "+incrementoX+","+incrementoY);
+
+        let celda = document.getElementById(controlX+","+controlY);
+        celda.classList.remove("seleccionado");
+        celda.classList.remove("erroneo");
+        celda.classList.remove("blanco");
+        celda.classList.add(color);
+        palabra += celda.textContent;
+        // console.log(celda);
+
+        controlX += incrementoX;
+        controlY += incrementoY;
+    }
+    let celda = document.getElementById(x2+","+y2);
+    palabra += celda.textContent;
+    celda.classList.remove("seleccionado");
+    celda.classList.remove("erroneo");
+    celda.classList.remove("blanco");
+    celda.classList.add(color);
+
+    console.log(palabra);
+    return palabra;
+}
+
+function comprobarPalabra(pal, pals) {
+    let salida = false;
+    for (const p of pals) {
+        if (p==pal) {
+            salida = true;
+        }
+        
+        console.log(p + " == " + pal + " = " + salida)
+    }
+    return salida;
+}
+
+function tacharPalabra(pal){
+    console.log("entrando a tachar " + pal);
+    
+    const parrafos = document.getElementById("palabrasBuscar").getElementsByTagName("p");
+
+    for (const p of parrafos) {
+        if (p.textContent === pal) {
+            console.log("tachando" + p);
+            p.classList.add("tachar")
+            break;
+        }
+        
     }
 }

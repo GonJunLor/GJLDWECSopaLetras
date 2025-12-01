@@ -77,11 +77,29 @@ h1{
 }
 
 /* Main */
-#tablero h2{
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    width: 80vw;
+}
+main h2{
     text-align: center;
-    background-color: red;
+    flex: 100%;
+    padding: 10px;
 }
 /* Tablero */
+#tablero {
+    border: 2px solid grey;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 600px;
+    display: flex;
+    justify-content: center;
+}
 #tablero table{border-collapse: collapse;}
 #tablero td{
     border: 1px solid rgb(189, 189, 189);
@@ -89,11 +107,34 @@ h1{
     width: 20px;
     height: 20px;
     text-align: center;
+    cursor: default;
+    user-select: none;
 }
 .verde{background-color: rgb(231, 247, 207);}
 
-/*  */
+/* Control del juego */
+.seleccionado{background-color: yellow;}
+.erroneo{background-color: red; color: yellow;}
+.blanco{background-color: transparent;}
+.encontrado{background-color: green; color: white;}
 
+/* Palabras a buscar */
+#palabrasBuscar{
+    border: 2px solid grey;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    width: 600px;
+    display: flex;
+    justify-content: center;
+}
+#palabrasBuscar p{
+    display: inline-block;
+    margin-right: 15px;
+}
+.tachar{
+    text-decoration: line-through;
+}
 
 /* Pie de pagína */
 body>footer{
