@@ -26,6 +26,9 @@ var origenX;
 var origenY;
 var palabra;
 var tableroBloqueado = false;
+var ratonPulsado = false;
+var anteriorX = 0; 
+var anteriorY = 0;
 
 infoElement.innerHTML = "Tamaño de tablero: " + tamTab + "*" + tamTab;
 
@@ -44,12 +47,15 @@ rellenarTablero();
 dibujarTablero(tablero);
 mostrarPalabras();
 
-function mostrarPalabras(params) {
+function mostrarPalabras() {
 
     for (const p of palabras) {
-        caja.innerHTML +=  "<p>"+p+"</p>" ;
+        const parrafo = document.createElement("p");
+        parrafo.innerHTML = p;
+
+        caja.appendChild(parrafo);
     }
-   
+
 }
 
 function palabramasLarga(array) {
@@ -241,8 +247,10 @@ function dibujarTablero(celdas) {
             let celda = document.createElement("td");
             celda.innerHTML = celdas[i][j];
             celda.id = i+","+j;
-            celda.addEventListener("mousedown",pulsarCelda);
-            celda.addEventListener("mouseup",soltarCelda);
+            celda.addEventListener("mousedown", pulsarCelda);
+            celda.addEventListener("mouseup", soltarCelda);
+            celda.addEventListener("mouseenter", entrarRatonEnCelda);
+            celda.addEventListener("mouseleave", salirRatonDeCelda);
             fila.append(celda);
         }
         tabla.append(fila);
@@ -289,10 +297,49 @@ function pulsarCelda(ev) {
     origenX = parseInt(letras[0],10);
     origenY = parseInt(letras[1],10);
 
+    ratonPulsado = true;
+
     // en algun momento devolver un array con las posiciones iniciales
 }
 
+function entrarRatonEnCelda(ev){
+    // Comprobación de bloqueo
+    if (tableroBloqueado) {
+        return; // Salir inmediatamente si el tablero está bloqueado
+    }
+
+    if (ratonPulsado) {
+        let coordenadas = ev.target.id
+    
+        let letras = coordenadas.split(",");
+        
+        moverX = parseInt(letras[0],10);
+        moverY = parseInt(letras[1],10);
+
+        console.log(moverX + "-" + moverY);
+
+        if(validarDireccion(origenX, origenY, moverX, moverY)){
+            anteriorX = moverX;
+            anteriorY = moverY;
+            pintarCeldas(origenX, origenY, moverX, moverY)
+        }
+    }
+
+}
+
+function salirRatonDeCelda(ev) {
+    // Comprobación de bloqueo
+    if (tableroBloqueado) {
+        return; // Salir inmediatamente si el tablero está bloqueado
+    }
+    if (ratonPulsado) {
+        pintarCeldas(origenX, origenY, anteriorX, anteriorY, "blanco");
+    }
+}
+
 function soltarCelda(ev){
+    ratonPulsado = false;
+
     // Comprobación de bloqueo
     if (tableroBloqueado) {
         return; // Salir inmediatamente si el tablero está bloqueado
@@ -337,6 +384,7 @@ function soltarCelda(ev){
         console.log("direccion NO válida");
     }
 
+    
 }
 
 function validarDireccion(x1, y1, x2, y2){
@@ -410,6 +458,17 @@ function comprobarPalabra(pal, pals) {
     return salida;
 }
 
-function tacharPalabra(p){
+function tacharPalabra(pal){
+    console.log("entrando a tachar " + pal);
+    
+    const parrafos = document.getElementById("palabrasBuscar").getElementsByTagName("p");
 
+    for (const p of parrafos) {
+        if (p.textContent === pal) {
+            console.log("tachando" + p);
+            p.classList.add("tachar")
+            break;
+        }
+        
+    }
 }
