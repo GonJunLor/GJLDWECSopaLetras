@@ -21,6 +21,10 @@ const caja = document.createElement("div");
 caja.id = "palabrasBuscar";
 main.appendChild(caja);
 
+// Creamos y añadimos tabla de puntuación al main
+var tablaPuntos = crearTabla();
+main.append(tablaPuntos);
+
 // variables para control de selección
 var origenX;
 var origenY;
@@ -39,24 +43,42 @@ var aDirecciones = [
     [0,1,1,1,0,-1,-1,-1]
 ];
 
-//dibujarTablero(tablero);
 recorrerPalabras();
-//dibujarTablero(tablero);
-document.writeln("<br>");
 rellenarTablero();
 dibujarTablero(tablero);
-mostrarPalabras();
+mostrarPalabras(caja, palabras);
 
-function mostrarPalabras() {
+// addPuntuacion(tablaPuntos, "gonzalo", 50000);
+// addPuntuacion(tablaPuntos, "gonzalo", 50000);
+// addPuntuacion(tablaPuntos, "gonzalo", 50000);
+
+exportarPuntuaciones(tablaPuntos);
+importarPuntuaciones(tablaPuntos);
+
+
+// ***********************************************
+// *************** FUNCIONES *********************
+// ***********************************************
+
+/**
+ * Crea un parrafo por cada palabra y lo añade al contenedor dado.
+ * @param {*} contenedor contendor html donde añadir las palabras
+ * @param {*} palabras array con las palabras a mostrar
+ */
+function mostrarPalabras(contenedor, palabras) {
 
     for (const p of palabras) {
         const parrafo = document.createElement("p");
         parrafo.innerHTML = p;
 
-        caja.appendChild(parrafo);
+        contenedor.appendChild(parrafo);
     }
 
 }
+
+// ***********************************************
+// ******** Comprobaciones inciales **************
+// ***********************************************
 
 function palabramasLarga(array) {
     let palabraLarga = 0;
@@ -86,18 +108,27 @@ function calcTamTablero(palabraLarga,totalLetras) {
     // console.log(totalLetras);
     return anchoTablero;
 }
+/**
+ * Crea un array del tamaño del tablero e inicializado a 0 todas las celdas.
+ * @param {*} tamTablero Un entero con el tamaño del tablero
+ * @returns el array con las dimensiones adecuadas o vacio si el tamaño del tablero es 0
+ */
 function crearTablero(tamTablero) {
     // creamos un array del tamaño del tablero e inicializado a 0 todas las celdas
     let celdas = [];
     for (let i = 0; i < tamTablero; i++) {
         celdas[i]=[];
         for (let j = 0; j < tamTablero; j++) {
-            //celdas[i][j] = j+","+i;
             celdas[i][j] = 0;
         }
     }
     return celdas;
 }
+
+// ***********************************************
+// ******** Preparar el tablero ******************
+// ***********************************************
+
 function recorrerPalabras() {
     // ordenar palabras para empezar con la más larga
     palabras.sort((a,b)=>b.length-a.length);
@@ -219,24 +250,6 @@ function posicionarPalabra(palabra) {
     return encajo;
 
 }
-function dibujarTableroWrite(celdas) {
-    document.writeln("<table>")
-    for (let i = 0; i < celdas.length; i++) {
-        document.writeln("<tr>")
-        for (let j = 0; j < celdas.length; j++) {
-            if (celdas[i][j]==0) {
-                document.writeln("<td>" + celdas[i][j] + "</td>");
-            } else{
-                document.writeln("<td class='verde'>" + celdas[i][j] + "</td>");
-            }
-            
-        }
-        document.writeln("<tr>")
-    }
-    document.writeln("</table>")
-}
-
-// crear todos los elementos con create no con ""
 function dibujarTablero(celdas) {
 
     let tabla = document.createElement("table")
@@ -284,6 +297,9 @@ function rellenarTablero() {
     }
 }
 
+// ***********************************************
+// ******** Control del juego ********************
+// ***********************************************
 function pulsarCelda(ev) {
     // Comprobación de bloqueo
     if (tableroBloqueado) {
@@ -301,7 +317,6 @@ function pulsarCelda(ev) {
 
     // en algun momento devolver un array con las posiciones iniciales
 }
-
 function entrarRatonEnCelda(ev){
     // Comprobación de bloqueo
     if (tableroBloqueado) {
@@ -326,7 +341,6 @@ function entrarRatonEnCelda(ev){
     }
 
 }
-
 function salirRatonDeCelda(ev) {
     // Comprobación de bloqueo
     if (tableroBloqueado) {
@@ -336,7 +350,6 @@ function salirRatonDeCelda(ev) {
         pintarCeldas(origenX, origenY, anteriorX, anteriorY, "blanco");
     }
 }
-
 function soltarCelda(ev){
     ratonPulsado = false;
 
@@ -386,7 +399,6 @@ function soltarCelda(ev){
 
     
 }
-
 function validarDireccion(x1, y1, x2, y2){
     let ok = false;
 
@@ -396,7 +408,6 @@ function validarDireccion(x1, y1, x2, y2){
 
     return ok;
 }
-
 function pintarCeldas(x1, y1, x2, y2, color="seleccionado"){
     
     let palabra = "";
@@ -445,7 +456,6 @@ function pintarCeldas(x1, y1, x2, y2, color="seleccionado"){
     console.log(palabra);
     return palabra;
 }
-
 function comprobarPalabra(pal, pals) {
     let salida = false;
     for (const p of pals) {
@@ -457,7 +467,6 @@ function comprobarPalabra(pal, pals) {
     }
     return salida;
 }
-
 function tacharPalabra(pal){
     console.log("entrando a tachar " + pal);
     
@@ -470,5 +479,57 @@ function tacharPalabra(pal){
             break;
         }
         
+    }
+}
+
+// ***********************************************
+// ******** Tabla con puntuaciones ***************
+// ***********************************************
+function crearTabla(){
+    let tabla = document.createElement("table");
+    let cabecera = document.createElement("thead");
+    let celdaNombre = document.createElement("th");
+    let celdaPuntos = document.createElement("th");
+
+    celdaNombre.innerHTML = "Nombre";
+    celdaPuntos.innerHTML = "Puntuación";
+
+    cabecera.append(celdaNombre);
+    cabecera.append(celdaPuntos);
+
+    tabla.append(cabecera);
+
+    return tabla;
+}
+function addPuntuacion(tabla, nombre, puntuacion){
+    let fila = document.createElement("tr");
+    let celdaNombre = document.createElement("td");
+    let celdaPuntos = document.createElement("td");
+
+    celdaNombre.innerHTML = nombre;
+    celdaPuntos.innerHTML = puntuacion;
+
+    fila.append(celdaNombre);
+    fila.append(celdaPuntos);
+
+    tabla.append(fila);
+}
+function exportarPuntuaciones(nombre, puntuacion) {
+    if (localStorage.getItem("puntuaciones")==null) {
+        localStorage.setItem("puntuaciones","");
+    }
+    
+    let puntuaciones = localStorage.getItem("puntuaciones");
+    puntuaciones += "alvaro:9874";
+    localStorage.setItem("puntuaciones",puntuaciones);
+}
+function importarPuntuaciones(tab) {
+    let puntuaciones = localStorage.getItem("puntuaciones");
+    let jugadores = puntuaciones.split(";");
+    for (const j of jugadores) {
+        let jugador = j.split(":");
+        let nombre = jugador[0];
+        let puntuacion = jugador[1];
+        addPuntuacion(tab, nombre, puntuacion);
     }
 }
