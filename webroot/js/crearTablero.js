@@ -516,11 +516,12 @@ function addPuntuacion(tabla, nombre, puntuacion){
 }
 function exportarPuntuaciones(nombre, puntuacion) {
     if (localStorage.getItem("puntuaciones")==null) {
-        localStorage.setItem("puntuaciones","");
+        localStorage.setItem("puntuaciones",":");
     }
     
     let puntuaciones = localStorage.getItem("puntuaciones");
-    puntuaciones += "alvaro:9874";
+    // cargar puntuación y nombre real, llamar a esta función al finalizar juego
+    // puntuaciones += ";alvaro:9874";
     localStorage.setItem("puntuaciones",puntuaciones);
 }
 function importarPuntuaciones(tab) {
