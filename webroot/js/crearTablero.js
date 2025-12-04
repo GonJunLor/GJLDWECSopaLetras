@@ -16,6 +16,7 @@ const tableroContainer = document.createElement("div");
 tableroContainer.id = "tablero"; // Opcional: darle un ID
 main.appendChild(tableroContainer);
 
+
 // Crear elemento para palabras a buscar
 const caja = document.createElement("div");
 caja.id = "palabrasBuscar";
@@ -33,6 +34,7 @@ var tableroBloqueado = false;
 var ratonPulsado = false;
 var anteriorX = 0; 
 var anteriorY = 0;
+var segundosJuego = 0;
 
 infoElement.innerHTML = "Tamaño de tablero: " + tamTab + "*" + tamTab;
 
@@ -45,8 +47,8 @@ var aDirecciones = [
 
 recorrerPalabras();
 rellenarTablero();
-dibujarTablero(tablero);
-mostrarPalabras(caja, palabras);
+inicio(tableroContainer);
+
 
 // addPuntuacion(tablaPuntos, "gonzalo", 50000);
 // addPuntuacion(tablaPuntos, "gonzalo", 50000);
@@ -59,6 +61,40 @@ importarPuntuaciones(tablaPuntos);
 // ***********************************************
 // *************** FUNCIONES *********************
 // ***********************************************
+
+function inicio(contenedorTablero) {
+
+    const cuadroNombre = document.createElement("input");
+    cuadroNombre.type = 'text';
+    cuadroNombre.name = 'cuadroNombre';
+    cuadroNombre.id = 'cuadroNombre';
+    cuadroNombre.placeholder = 'Introduce nombre';
+
+    const botonInicio = document.createElement("input");
+    botonInicio.type = 'submit';
+    botonInicio.name = 'botonInicio';
+    botonInicio.id = 'botonInicio';
+    botonInicio.value = 'Iniciar Juego';
+    botonInicio.addEventListener("click",()=>{
+        nombre = cuadroNombre.value;
+        empezarPartida(nombre, contenedorTablero, cuadroNombre, botonInicio);
+    })
+
+    contenedorTablero.append(cuadroNombre);
+    contenedorTablero.append(botonInicio);
+}
+
+function empezarPartida(nombreJugador, contenedorTablero, cuadroNombre, botonInicio) {
+    if (nombreJugador != "") {
+        contenedorTablero.removeChild(cuadroNombre);
+        contenedorTablero.removeChild(botonInicio);
+        crearCronometro(nombre, contenedorTablero)
+        dibujarTablero(tablero);
+        mostrarPalabras(caja, palabras);
+
+        tiempo = setInterval(sumarSegundos,1000);
+    }
+}
 
 /**
  * Crea un parrafo por cada palabra y lo añade al contenedor dado.
@@ -532,5 +568,38 @@ function importarPuntuaciones(tab) {
         let nombre = jugador[0];
         let puntuacion = jugador[1];
         addPuntuacion(tab, nombre, puntuacion);
+    }
+}
+
+// ***********************************************
+// *************** Cronómetro ********************
+// ***********************************************
+function crearCronometro(nombre, contenedorTablero) {
+
+    const cronometro = document.createElement("div");
+    cronometro.id="cronometro";
+    cronometro.innerHTML ="<span class='nombreJugador'>"+ nombre + "</span> -> <span id='contadorJuego'>00:00:00</span>";
+
+    contenedorTablero.append(cronometro);
+}
+function sumarSegundos() {
+    segundosJuego++;
+    // 2. Calcular Horas, Minutos y Segundos a partir del total de segundos
+    const horas = Math.floor(segundosJuego / 3600); // 3600 segundos en una hora
+    const minutos = Math.floor((segundosJuego % 3600) / 60); // Segundos restantes después de las horas, divididos entre 60
+    const segundos = segundosJuego % 60; // Segundos restantes
+
+    // 3. Formatear la salida (Asegurar 2 dígitos: 00, 01, ..., 09, 10, ...)
+    const h = String(horas).padStart(2, '0');
+    const m = String(minutos).padStart(2, '0');
+    const s = String(segundos).padStart(2, '0');
+
+    // 4. Construir la cadena de tiempo
+    const tiempoFormateado = `${h}:${m}:${s}`;
+
+    // 5. Mostrar en el HTML
+    let contadorJuego = document.getElementById('contadorJuego');
+    if (contadorJuego) {
+        contadorJuego.innerHTML = tiempoFormateado;
     }
 }
