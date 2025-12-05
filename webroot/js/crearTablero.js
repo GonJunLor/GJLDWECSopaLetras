@@ -34,7 +34,10 @@ var tableroBloqueado = false;
 var ratonPulsado = false;
 var anteriorX = 0; 
 var anteriorY = 0;
+var palabrasTachadas = 0;
 var segundosJuego = 0;
+var tiempo;
+var nombre = "";
 
 infoElement.innerHTML = "Tamaño de tablero: " + tamTab + "*" + tamTab;
 
@@ -513,9 +516,20 @@ function tacharPalabra(pal){
             console.log("tachando" + p);
             p.classList.add("tachar")
             break;
-        }
-        
+        } 
     }
+
+    palabrasTachadas++;
+    console.log(palabrasTachadas + " == " + palabras.length)
+    if (palabrasTachadas==palabras.length) { 
+        finDejuego();
+    }
+}
+function finDejuego() {
+    tableroBloqueado = true;
+    clearTimeout(tiempo);
+    addPuntuacion(tablaPuntos, nombre, segundosJuego);
+    exportarPuntuaciones(nombre, segundosJuego);
 }
 
 // ***********************************************
@@ -557,7 +571,7 @@ function exportarPuntuaciones(nombre, puntuacion) {
     
     let puntuaciones = localStorage.getItem("puntuaciones");
     // cargar puntuación y nombre real, llamar a esta función al finalizar juego
-    // puntuaciones += ";alvaro:9874";
+    puntuaciones += ";" + nombre + ":" + puntuacion;
     localStorage.setItem("puntuaciones",puntuaciones);
 }
 function importarPuntuaciones(tab) {
