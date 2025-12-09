@@ -1,4 +1,24 @@
-var palabras = ["perro", "gato", "loro", "guacamayo", "col", "sal", "agua", "lapicero","balon","pizarra"];
+// Comprueba si las cookies están habilitadas o no
+if(navigator.cookieEnabled==false){
+    alert("Las cookies estan desactivadas, no se puede guardar las puntuaciones");
+}
+
+/* Control de conexión del navegador */
+// if (navigator.onLine) {
+//   console.log("El navegador está en línea. ¡Conexión disponible!");
+// } else {
+//   console.log("El navegador está fuera de línea. ¡Sin conexión!");
+// }
+// window.addEventListener('online', () => {
+//   console.log("¡Volvimos a estar en línea!");
+// });
+
+// window.addEventListener('offline', () => {
+//   console.log("¡Te has desconectado!");
+// });
+
+// var palabras = ["perro", "gato", "loro", "guacamayo", "col", "sal", "agua", "lapicero","balon","pizarra"];
+var palabras = ["perro"];
 const TAM_PALABRA_MAYOR = palabramasLarga(palabras);
 const TOTAL_LETRAS_PALABARAS = cantidadLetras(palabras);
 
@@ -61,17 +81,12 @@ exportarPuntuaciones(tablaPuntos);
 importarPuntuaciones(tablaPuntos);
 
 
+
 // ***********************************************
 // *************** FUNCIONES *********************
 // ***********************************************
 
 function inicio(contenedorTablero) {
-
-    const cuadroNombre = document.createElement("input");
-    cuadroNombre.type = 'text';
-    cuadroNombre.name = 'cuadroNombre';
-    cuadroNombre.id = 'cuadroNombre';
-    cuadroNombre.placeholder = 'Introduce nombre';
 
     const botonInicio = document.createElement("input");
     botonInicio.type = 'submit';
@@ -79,24 +94,20 @@ function inicio(contenedorTablero) {
     botonInicio.id = 'botonInicio';
     botonInicio.value = 'Iniciar Juego';
     botonInicio.addEventListener("click",()=>{
-        nombre = cuadroNombre.value;
-        empezarPartida(nombre, contenedorTablero, cuadroNombre, botonInicio);
+
+        empezarPartida(contenedorTablero, botonInicio);
     })
 
-    contenedorTablero.append(cuadroNombre);
     contenedorTablero.append(botonInicio);
 }
 
-function empezarPartida(nombreJugador, contenedorTablero, cuadroNombre, botonInicio) {
-    if (nombreJugador != "") {
-        contenedorTablero.removeChild(cuadroNombre);
-        contenedorTablero.removeChild(botonInicio);
-        crearCronometro(nombre, contenedorTablero)
-        dibujarTablero(tablero);
-        mostrarPalabras(caja, palabras);
+function empezarPartida(contenedorTablero, botonInicio) {
+    contenedorTablero.removeChild(botonInicio);
+    crearCronometro(contenedorTablero)
+    dibujarTablero(tablero);
+    mostrarPalabras(caja, palabras);
 
-        tiempo = setInterval(sumarSegundos,1000);
-    }
+    tiempo = setInterval(sumarSegundos,1000);
 }
 
 /**
@@ -142,9 +153,9 @@ function calcTamTablero(palabraLarga,totalLetras) {
         anchoTablero=palabraLarga;
     }
 
-    // console.log(anchoTablero);
-    // console.log(palabraLarga);
-    // console.log(totalLetras);
+    // //console.log(anchoTablero);
+    // //console.log(palabraLarga);
+    // //console.log(totalLetras);
     return anchoTablero;
 }
 /**
@@ -176,7 +187,7 @@ function recorrerPalabras() {
         //let contador = tamTab+1;
         do {
             siguientePalabra = posicionarPalabra(p);
-            console.log("Palabra puesta: " + siguientePalabra)
+            //console.log("Palabra puesta: " + siguientePalabra)
             // contador--;
         } while (!siguientePalabra /*&& contador>0*/);
     }
@@ -184,7 +195,7 @@ function recorrerPalabras() {
 function posicionarPalabra(palabra) {
     let longitudPalabra = palabra.length;
     let aPalabra = Array.from(palabra);
-    console.log("Intento de poner: " + aPalabra);
+    //console.log("Intento de poner: " + aPalabra);
     let encajo = false;
     //console.log(aPalabra);
     
@@ -234,12 +245,11 @@ function posicionarPalabra(palabra) {
 
                         // comprueba que si hay una letra se igual que la de la palabra
                         if (caracter!=carTablero && carTablero!=0) {
-                            console.log("***** encajo if false");
+                            //console.log("***** encajo if false");
                             encajo=false;
                             numCaracteres--; // para evitar que entre en el if de despues 
                         }
-                        console.log("Direccion: " + direccion + " pos: " + posi + "," + posj + " Carcteres: " + 
-                            carTablero + "==" + caracter);
+                        //console.log("Direccion: " + direccion + " pos: " + posi + "," + posj + " Carcteres: " + carTablero + "==" + caracter);
                         posi+=aDirecciones[0][direccion];
                         posj+=aDirecciones[1][direccion];
                         numCaracteres++;
@@ -257,28 +267,28 @@ function posicionarPalabra(palabra) {
         //         //console.log("Direccion: " + direccion + " pos: " + posi + "," + posj)
 
         //     } catch (error) {
-        //         console.log("***** encajo catch false" + error);
+        //         //console.log("***** encajo catch false" + error);
         //         //encajo=false;
         //     }
         }
 
         /* si no hemos conseguido encajar en todas las direcciones salimos y devolvemos false para que vuelva a cargar
         ésta funcion pero con otra posición */
-        console.log("Valor de i=" + i)
+        //console.log("Valor de i=" + i)
         // if (i==7) {
-        //     console.log(">>>>>  encajo fin for false");
+        //     //console.log(">>>>>  encajo fin for false");
         //     encajo=false;
         // }
         //salir=true;
     }
 
     /* Si llegamos aqui es que la palabra se puede posicionar, aqui la guardamos en el tablero */
-    console.log("------- Valor de encajo = " + encajo);
+    //console.log("------- Valor de encajo = " + encajo);
     if (encajo) {
         posi = inicialPosi;
         posj = inicialPosj;
         for (const caracter of aPalabra) {
-            console.log("Caracter de la palabra: "+caracter+" en pos " +posi + "," + posj + " con direccion: " + direccion);
+            //console.log("Caracter de la palabra: "+caracter+" en pos " +posi + "," + posj + " con direccion: " + direccion);
             tablero[posi][posj] = caracter;
             posi+=aDirecciones[0][direccion];
             posj+=aDirecciones[1][direccion]; 
@@ -370,7 +380,7 @@ function entrarRatonEnCelda(ev){
         moverX = parseInt(letras[0],10);
         moverY = parseInt(letras[1],10);
 
-        console.log(moverX + "-" + moverY);
+        //console.log(moverX + "-" + moverY);
 
         if(validarDireccion(origenX, origenY, moverX, moverY)){
             anteriorX = moverX;
@@ -407,16 +417,16 @@ function soltarCelda(ev){
     // en algun momento devolver un array con las posiciones destino en esta funcion y hacer esto fuera
     if(validarDireccion(origenX, origenY, destinoX, destinoY)){
         // dirección válida
-        console.log("direccion válida");
+        //console.log("direccion válida");
         let palabra = pintarCeldas(origenX, origenY, destinoX, destinoY);
         if(comprobarPalabra(palabra, palabras)){
             // la palabra esta en la sopa de letras
-            console.log("encontrado")
+            //console.log("encontrado")
             pintarCeldas(origenX, origenY, destinoX, destinoY, "encontrado")
             tacharPalabra(palabra);
         } else {
             // la palabra no esta en la sopa de letras
-            console.log("NO encontrado")
+            //console.log("NO encontrado")
             pintarCeldas(origenX, origenY, destinoX, destinoY, "erroneo")
 
             // Bloquear el tablero antes del setTimeout
@@ -433,7 +443,7 @@ function soltarCelda(ev){
 
     } else {
         // dirección inválida
-        console.log("direccion NO válida");
+        //console.log("direccion NO válida");
     }
 
     
@@ -468,11 +478,11 @@ function pintarCeldas(x1, y1, x2, y2, color="seleccionado"){
     let controlX = x1;
     let controlY = y1;
     while (controlX!=x2 || controlY!=y2){
-        // console.log("x1="+x1+", y1="+y1+", x2="+x2+", y2="+y2)
-        // console.log("controlX="+controlX+" ,controlY="+controlY);
+        // //console.log("x1="+x1+", y1="+y1+", x2="+x2+", y2="+y2)
+        // //console.log("controlX="+controlX+" ,controlY="+controlY);
 
-        // console.log(controlX+","+controlY);
-        // console.log("Incrementos: "+incrementoX+","+incrementoY);
+        // //console.log(controlX+","+controlY);
+        // //console.log("Incrementos: "+incrementoX+","+incrementoY);
 
         let celda = document.getElementById(controlX+","+controlY);
         celda.classList.remove("seleccionado");
@@ -480,7 +490,7 @@ function pintarCeldas(x1, y1, x2, y2, color="seleccionado"){
         celda.classList.remove("blanco");
         celda.classList.add(color);
         palabra += celda.textContent;
-        // console.log(celda);
+        // //console.log(celda);
 
         controlX += incrementoX;
         controlY += incrementoY;
@@ -492,7 +502,7 @@ function pintarCeldas(x1, y1, x2, y2, color="seleccionado"){
     celda.classList.remove("blanco");
     celda.classList.add(color);
 
-    console.log(palabra);
+    //console.log(palabra);
     return palabra;
 }
 function comprobarPalabra(pal, pals) {
@@ -502,25 +512,25 @@ function comprobarPalabra(pal, pals) {
             salida = true;
         }
         
-        console.log(p + " == " + pal + " = " + salida)
+        //console.log(p + " == " + pal + " = " + salida)
     }
     return salida;
 }
 function tacharPalabra(pal){
-    console.log("entrando a tachar " + pal);
+    //console.log("entrando a tachar " + pal);
     
     const parrafos = document.getElementById("palabrasBuscar").getElementsByTagName("p");
 
     for (const p of parrafos) {
         if (p.textContent === pal) {
-            console.log("tachando" + p);
+            //console.log("tachando" + p);
             p.classList.add("tachar")
             break;
         } 
     }
 
     palabrasTachadas++;
-    console.log(palabrasTachadas + " == " + palabras.length)
+    //console.log(palabrasTachadas + " == " + palabras.length)
     if (palabrasTachadas==palabras.length) { 
         finDejuego();
     }
@@ -528,13 +538,30 @@ function tacharPalabra(pal){
 function finDejuego() {
     tableroBloqueado = true;
     clearTimeout(tiempo);
-    addPuntuacion(tablaPuntos, nombre, segundosJuego);
-    exportarPuntuaciones(nombre, segundosJuego);
+    if(comprobarPuntuacion(segundosJuego)){
+        addPuntuacion(tablaPuntos, nombre, segundosJuego);
+        exportarPuntuaciones(nombre, segundosJuego);
+    } 
 }
 
 // ***********************************************
 // ******** Tabla con puntuaciones ***************
 // ***********************************************
+function comprobarPuntuacion(puntos) {
+
+    let puntuaciones = localStorage.getItem("puntuaciones");
+    let jugadores = puntuaciones.split(";");
+
+    let minimo = Math.max();
+    for (const j of jugadores) {
+        let jugador = j.split(":");
+        if (jugador[1]<minimo) {
+            minimo = jugador[1];
+        }
+    }
+
+    return puntos>minimo;
+}
 function crearTabla(){
     let tabla = document.createElement("table");
     let cabecera = document.createElement("thead");
@@ -567,12 +594,15 @@ function addPuntuacion(tabla, nombre, puntuacion){
 function exportarPuntuaciones(nombre, puntuacion) {
     if (localStorage.getItem("puntuaciones")==null) {
         localStorage.setItem("puntuaciones",":");
-    }
-    
-    let puntuaciones = localStorage.getItem("puntuaciones");
-    // cargar puntuación y nombre real, llamar a esta función al finalizar juego
-    puntuaciones += ";" + nombre + ":" + puntuacion;
-    localStorage.setItem("puntuaciones",puntuaciones);
+    } else {
+        let puntuaciones = localStorage.getItem("puntuaciones");
+        // cargar puntuación y nombre real, llamar a esta función al finalizar juego
+        // console.log(nombre + ":" + puntuacion);
+        if (puntuacion!=undefined) {
+            puntuaciones += ";" + nombre + ":" + puntuacion;
+            localStorage.setItem("puntuaciones",puntuaciones);
+        }
+    } 
 }
 function importarPuntuaciones(tab) {
     let puntuaciones = localStorage.getItem("puntuaciones");
@@ -588,11 +618,11 @@ function importarPuntuaciones(tab) {
 // ***********************************************
 // *************** Cronómetro ********************
 // ***********************************************
-function crearCronometro(nombre, contenedorTablero) {
+function crearCronometro(contenedorTablero) {
 
     const cronometro = document.createElement("div");
     cronometro.id="cronometro";
-    cronometro.innerHTML ="<span class='nombreJugador'>"+ nombre + "</span> -> <span id='contadorJuego'>00:00:00</span>";
+    cronometro.innerHTML ="<span id='contadorJuego'>00:00:00</span>";
 
     contenedorTablero.append(cronometro);
 }
