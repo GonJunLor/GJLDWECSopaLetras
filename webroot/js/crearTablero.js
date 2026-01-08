@@ -80,7 +80,10 @@ inicio(tableroContainer);
 exportarPuntuaciones(tablaPuntos);
 importarPuntuaciones(tablaPuntos);
 
-
+// usar JSON para cargar de localstorage
+var puntuaciones = JSON.parse(localStorage.getItem("puntuaciones"))
+// usar JSON para guardar en localstorage
+localStorage.setItem("puntuaciones",JSON.stringify(puntuaciones));
 
 // ***********************************************
 // *************** FUNCIONES *********************
