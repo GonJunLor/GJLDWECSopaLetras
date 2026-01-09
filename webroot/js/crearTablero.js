@@ -76,14 +76,15 @@ inicio(tableroContainer);
 // addPuntuacion(tablaPuntos, "gonzalo", 50000);
 // addPuntuacion(tablaPuntos, "gonzalo", 50000);
 // addPuntuacion(tablaPuntos, "gonzalo", 50000);
+var puntuaciones;
 
-exportarPuntuaciones(tablaPuntos);
-importarPuntuaciones(tablaPuntos);
+exportarPuntuaciones();
 
+mostrarPuntuaciones();
 // usar JSON para cargar de localstorage
-var puntuaciones = JSON.parse(localStorage.getItem("puntuaciones"))
+//  = JSON.parse(localStorage.getItem("puntuaciones"))
 // usar JSON para guardar en localstorage
-localStorage.setItem("puntuaciones",JSON.stringify(puntuaciones));
+// localStorage.setItem("puntuaciones",JSON.stringify(puntuaciones));
 
 // ***********************************************
 // *************** FUNCIONES *********************
@@ -542,80 +543,97 @@ function finDejuego() {
     tableroBloqueado = true;
     clearTimeout(tiempo);
     if(comprobarPuntuacion(segundosJuego)){
-        addPuntuacion(tablaPuntos, nombre, segundosJuego);
-        exportarPuntuaciones(nombre, segundosJuego);
+        
     } 
 }
 
 // ***********************************************
 // ******** Tabla con puntuaciones ***************
 // ***********************************************
-function comprobarPuntuacion(puntos) {
+function comprobarPuntuacion(puntos, nivel=0) {
+    let control = false;
 
-    let puntuaciones = localStorage.getItem("puntuaciones");
-    let jugadores = puntuaciones.split(";");
+    importarPuntuaciones();
 
-    let minimo = Math.max();
-    for (const j of jugadores) {
-        let jugador = j.split(":");
-        if (jugador[1]<minimo) {
-            minimo = jugador[1];
-        }
+    // cargamos las puntuaciones del nivel requerido por parámetro
+    let aPuntos = puntuaciones[nivel];
+    // console.log(aPuntos);
+
+    for (const fila of aPuntos) {
+        console.log(fila);
     }
 
-    return puntos>minimo;
+    return control;
 }
 function crearTabla(){
     let tabla = document.createElement("table");
+    tabla.setAttribute("id","tablapuntos");
     let cabecera = document.createElement("thead");
-    let celdaNombre = document.createElement("th");
-    let celdaPuntos = document.createElement("th");
+    let cabNombre = document.createElement("th");
+    let cabPuntos = document.createElement("th");
 
-    celdaNombre.innerHTML = "Nombre";
-    celdaPuntos.innerHTML = "Puntuación";
+    cabNombre.innerHTML = "Nombre";
+    cabPuntos.innerHTML = "Puntuación";
 
-    cabecera.append(celdaNombre);
-    cabecera.append(celdaPuntos);
+    cabecera.append(cabNombre);
+    cabecera.append(cabPuntos);
 
     tabla.append(cabecera);
 
+    for (let i = 0; i < 3; i++) {
+        let filaPuntos = document.createElement("tr");
+        // filaPuntos.classList.add("p"+(i+1));
+        filaPuntos.setAttribute("id","p"+(i+1));
+        filaPuntos.append(document.createElement("td"));
+        filaPuntos.append(document.createElement("td"));
+        tabla.append(filaPuntos);
+    }
+
     return tabla;
 }
-function addPuntuacion(tabla, nombre, puntuacion){
-    let fila = document.createElement("tr");
-    let celdaNombre = document.createElement("td");
-    let celdaPuntos = document.createElement("td");
+function mostrarPuntuaciones(nivel=0) {
+    importarPuntuaciones();
 
-    celdaNombre.innerHTML = nombre;
-    celdaPuntos.innerHTML = puntuacion;
+    // obtengo las filas de la tabla de puntos
+    let filasPuntos = document.getElementById("tablapuntos").childNodes;
+    
+    // cargamos las puntuaciones del nivel requerido por parámetro
+    let aPuntos = puntuaciones[nivel];
+    // console.log(aPuntos);
 
-    fila.append(celdaNombre);
-    fila.append(celdaPuntos);
-
-    tabla.append(fila);
+    // recorro esas filas de la 1-3
+    for (let i = 1; i <= 3; i++) {
+        // en cada fila el hijo 0 es para nombre y el hijo 1 es para puntuación
+        filasPuntos[i].childNodes[0].innerHTML=aPuntos[i-1].nombre;
+        filasPuntos[i].childNodes[1].innerHTML=aPuntos[i-1].puntuacion;
+    }
 }
-function exportarPuntuaciones(nombre, puntuacion) {
+function exportarPuntuaciones() {
     if (localStorage.getItem("puntuaciones")==null) {
-        localStorage.setItem("puntuaciones",":");
-    } else {
-        let puntuaciones = localStorage.getItem("puntuaciones");
-        // cargar puntuación y nombre real, llamar a esta función al finalizar juego
-        // console.log(nombre + ":" + puntuacion);
-        if (puntuacion!=undefined) {
-            puntuaciones += ";" + nombre + ":" + puntuacion;
-            localStorage.setItem("puntuaciones",puntuaciones);
-        }
+        puntuaciones = [
+            [
+                {"nombre":"","puntuacion":0},
+                {"nombre":"","puntuacion":0},
+                {"nombre":"","puntuacion":0}
+            ], 
+            [
+                {"nombre":"","puntuacion":1},
+                {"nombre":"","puntuacion":1},
+                {"nombre":"","puntuacion":1}
+            ], 
+            [
+                {"nombre":"","puntuacion":2},
+                {"nombre":"","puntuacion":2},
+                {"nombre":"","puntuacion":2}
+            ]
+        ]
+        localStorage.setItem("puntuaciones",JSON.stringify(puntuaciones));
+    } else if(puntuaciones!=undefined){
+        localStorage.setItem("puntuaciones",JSON.stringify(puntuaciones));
     } 
 }
-function importarPuntuaciones(tab) {
-    let puntuaciones = localStorage.getItem("puntuaciones");
-    let jugadores = puntuaciones.split(";");
-    for (const j of jugadores) {
-        let jugador = j.split(":");
-        let nombre = jugador[0];
-        let puntuacion = jugador[1];
-        addPuntuacion(tab, nombre, puntuacion);
-    }
+function importarPuntuaciones() {
+    puntuaciones = JSON.parse(localStorage.getItem("puntuaciones"));
 }
 
 // ***********************************************
