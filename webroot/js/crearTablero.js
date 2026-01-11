@@ -543,28 +543,15 @@ function finDejuego() {
     tableroBloqueado = true;
     clearTimeout(tiempo);
     if(comprobarPuntuacion(segundosJuego)){
-        
+        console.log("puntuacion menor");
+        ordenarPuntuaciones(segundosJuego);
+        mostrarPuntuaciones();
     } 
 }
 
 // ***********************************************
 // ******** Tabla con puntuaciones ***************
 // ***********************************************
-function comprobarPuntuacion(puntos, nivel=0) {
-    let control = false;
-
-    importarPuntuaciones();
-
-    // cargamos las puntuaciones del nivel requerido por parámetro
-    let aPuntos = puntuaciones[nivel];
-    // console.log(aPuntos);
-
-    for (const fila of aPuntos) {
-        console.log(fila);
-    }
-
-    return control;
-}
 function crearTabla(){
     let tabla = document.createElement("table");
     tabla.setAttribute("id","tablapuntos");
@@ -591,6 +578,39 @@ function crearTabla(){
 
     return tabla;
 }
+function comprobarPuntuacion(puntos, nivel=0) {
+    let control = false;
+
+    importarPuntuaciones();
+
+    // cargamos las puntuaciones del nivel requerido por parámetro
+    let aPuntos = puntuaciones[nivel];
+    // console.log(aPuntos);
+
+    for (const fila of aPuntos) {
+        if(puntos<fila.puntuacion) control = true;
+    }
+
+    return control;
+}
+function ordenarPuntuaciones(puntos, nivel=0) {
+    importarPuntuaciones();
+
+    // 1. Añadimos la nueva puntuación al array actual del nivel
+    // Usamos prompt para pedir el nombre, hay cambiarlo con poner el nombre directamente en la celda correspondiente de la tabla
+    let nombreJugador = prompt("¡Nueva mejor puntuación! Introduce tu nombre:") || "Anónimo";
+    
+    puntuaciones[nivel].push({ "nombre": nombreJugador, "puntuacion": puntos });
+
+    // 2. Ordenamos de menor a mayor (porque en tiempo, menos es mejor)
+    puntuaciones[nivel].sort((a, b) => a.puntuacion - b.puntuacion);
+
+    // 3. Nos quedamos solo con los 3 mejores
+    puntuaciones[nivel] = puntuaciones[nivel].slice(0, 3);
+
+    // 4. Guardamos y actualizamos visualmente
+    exportarPuntuaciones();
+}
 function mostrarPuntuaciones(nivel=0) {
     importarPuntuaciones();
 
@@ -612,9 +632,9 @@ function exportarPuntuaciones() {
     if (localStorage.getItem("puntuaciones")==null) {
         puntuaciones = [
             [
-                {"nombre":"","puntuacion":0},
-                {"nombre":"","puntuacion":0},
-                {"nombre":"","puntuacion":0}
+                {"nombre":"aaa","puntuacion":100},
+                {"nombre":"bbb","puntuacion":100},
+                {"nombre":"ccc","puntuacion":100}
             ], 
             [
                 {"nombre":"","puntuacion":1},
