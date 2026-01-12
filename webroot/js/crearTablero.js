@@ -72,19 +72,11 @@ recorrerPalabras();
 rellenarTablero();
 inicio(tableroContainer);
 
-
-// addPuntuacion(tablaPuntos, "gonzalo", 50000);
-// addPuntuacion(tablaPuntos, "gonzalo", 50000);
-// addPuntuacion(tablaPuntos, "gonzalo", 50000);
 var puntuaciones;
 
 exportarPuntuaciones();
 
 mostrarPuntuaciones();
-// usar JSON para cargar de localstorage
-//  = JSON.parse(localStorage.getItem("puntuaciones"))
-// usar JSON para guardar en localstorage
-// localStorage.setItem("puntuaciones",JSON.stringify(puntuaciones));
 
 // ***********************************************
 // *************** FUNCIONES *********************
@@ -542,11 +534,16 @@ function tacharPalabra(pal){
 function finDejuego() {
     tableroBloqueado = true;
     clearTimeout(tiempo);
-    if(comprobarPuntuacion(segundosJuego)){
+    let puntos = parseInt((1/segundosJuego)*1000);
+    if(comprobarPuntuacion(puntos)){
         console.log("puntuacion menor");
-        ordenarPuntuaciones(segundosJuego);
+        ordenarPuntuaciones(puntos);
         mostrarPuntuaciones();
     } 
+    let caja = document.querySelector("main h2");
+    caja.innerHTML = "Tus puntos: " + puntos + ", Reiniciando juego...";
+    setTimeout(()=>{location.reload();},3000);
+    
 }
 
 // ***********************************************
@@ -588,7 +585,7 @@ function comprobarPuntuacion(puntos, nivel=0) {
     // console.log(aPuntos);
 
     for (const fila of aPuntos) {
-        if(puntos<fila.puntuacion) control = true;
+        if(puntos>fila.puntuacion) control = true;
     }
 
     return control;
@@ -596,19 +593,19 @@ function comprobarPuntuacion(puntos, nivel=0) {
 function ordenarPuntuaciones(puntos, nivel=0) {
     importarPuntuaciones();
 
-    // 1. Añadimos la nueva puntuación al array actual del nivel
     // Usamos prompt para pedir el nombre, hay cambiarlo con poner el nombre directamente en la celda correspondiente de la tabla
     let nombreJugador = prompt("¡Nueva mejor puntuación! Introduce tu nombre:") || "Anónimo";
     
+    // Eliminamos la última puntuación
+    puntuaciones[nivel].pop();
+
+    // Añadimos la nueva al final
     puntuaciones[nivel].push({ "nombre": nombreJugador, "puntuacion": puntos });
 
-    // 2. Ordenamos de menor a mayor (porque en tiempo, menos es mejor)
-    puntuaciones[nivel].sort((a, b) => a.puntuacion - b.puntuacion);
+    // Ordenamos de menor a mayor (porque en tiempo, menos es mejor)
+    puntuaciones[nivel].sort((a, b) => b.puntuacion - a.puntuacion);
 
-    // 3. Nos quedamos solo con los 3 mejores
-    puntuaciones[nivel] = puntuaciones[nivel].slice(0, 3);
-
-    // 4. Guardamos y actualizamos visualmente
+    // Guardamos y actualizamos visualmente
     exportarPuntuaciones();
 }
 function mostrarPuntuaciones(nivel=0) {
@@ -632,19 +629,19 @@ function exportarPuntuaciones() {
     if (localStorage.getItem("puntuaciones")==null) {
         puntuaciones = [
             [
-                {"nombre":"aaa","puntuacion":100},
-                {"nombre":"bbb","puntuacion":100},
-                {"nombre":"ccc","puntuacion":100}
+                {"nombre":"","puntuacion":0},
+                {"nombre":"","puntuacion":0},
+                {"nombre":"","puntuacion":0}
             ], 
             [
-                {"nombre":"","puntuacion":1},
-                {"nombre":"","puntuacion":1},
-                {"nombre":"","puntuacion":1}
+                {"nombre":"","puntuacion":0},
+                {"nombre":"","puntuacion":0},
+                {"nombre":"","puntuacion":0}
             ], 
             [
-                {"nombre":"","puntuacion":2},
-                {"nombre":"","puntuacion":2},
-                {"nombre":"","puntuacion":2}
+                {"nombre":"","puntuacion":0},
+                {"nombre":"","puntuacion":0},
+                {"nombre":"","puntuacion":0}
             ]
         ]
         localStorage.setItem("puntuaciones",JSON.stringify(puntuaciones));
