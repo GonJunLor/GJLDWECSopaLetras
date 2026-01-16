@@ -1,3 +1,5 @@
+import {crearCronometro, sumarSegundos, segundosJuego} from "./cronometro.js";
+
 // Comprueba si las cookies están habilitadas o no
 if(navigator.cookieEnabled==false){
     alert("Las cookies estan desactivadas, no se puede guardar las puntuaciones");
@@ -55,7 +57,7 @@ var ratonPulsado = false;
 var anteriorX = 0; 
 var anteriorY = 0;
 var palabrasTachadas = 0;
-var segundosJuego = 0;
+// export var segundosJuego = 0;
 var tiempo;
 var nombre = "";
 
@@ -144,7 +146,7 @@ function cantidadLetras(array) {
 }
 function calcTamTablero(palabraLarga,totalLetras) {
     totalLetras*=2;
-    anchoTablero = parseInt(Math.sqrt(totalLetras))+1;
+    let anchoTablero = parseInt(Math.sqrt(totalLetras))+1;
     if (palabraLarga>=anchoTablero) {
         anchoTablero=palabraLarga;
     }
@@ -231,7 +233,7 @@ function posicionarPalabra(palabra) {
         //     try {
                 posi = inicialPosi;
                 posj = inicialPosj;
-                numCaracteres = 0;
+                let numCaracteres = 0;
                 for (const caracter of aPalabra) {
                     
                     // para comprobar si las posiciones estan dentro de los limites del tablero
@@ -373,8 +375,8 @@ function entrarRatonEnCelda(ev){
     
         let letras = coordenadas.split(",");
         
-        moverX = parseInt(letras[0],10);
-        moverY = parseInt(letras[1],10);
+        let moverX = parseInt(letras[0],10);
+        let moverY = parseInt(letras[1],10);
 
         //console.log(moverX + "-" + moverY);
 
@@ -656,32 +658,32 @@ function importarPuntuaciones() {
 // ***********************************************
 // *************** Cronómetro ********************
 // ***********************************************
-function crearCronometro(contenedorTablero) {
+// function crearCronometro(contenedorTablero) {
 
-    const cronometro = document.createElement("div");
-    cronometro.id="cronometro";
-    cronometro.innerHTML ="<span id='contadorJuego'>00:00:00</span>";
+//     const cronometro = document.createElement("div");
+//     cronometro.id="cronometro";
+//     cronometro.innerHTML ="<span id='contadorJuego'>00:00:00</span>";
 
-    contenedorTablero.append(cronometro);
-}
-function sumarSegundos() {
-    segundosJuego++;
-    // 2. Calcular Horas, Minutos y Segundos a partir del total de segundos
-    const horas = Math.floor(segundosJuego / 3600); // 3600 segundos en una hora
-    const minutos = Math.floor((segundosJuego % 3600) / 60); // Segundos restantes después de las horas, divididos entre 60
-    const segundos = segundosJuego % 60; // Segundos restantes
+//     contenedorTablero.append(cronometro);
+// }
+// function sumarSegundos() {
+//     segundosJuego++;
+//     // 2. Calcular Horas, Minutos y Segundos a partir del total de segundos
+//     const horas = Math.floor(segundosJuego / 3600); // 3600 segundos en una hora
+//     const minutos = Math.floor((segundosJuego % 3600) / 60); // Segundos restantes después de las horas, divididos entre 60
+//     const segundos = segundosJuego % 60; // Segundos restantes
 
-    // 3. Formatear la salida (Asegurar 2 dígitos: 00, 01, ..., 09, 10, ...)
-    const h = String(horas).padStart(2, '0');
-    const m = String(minutos).padStart(2, '0');
-    const s = String(segundos).padStart(2, '0');
+//     // 3. Formatear la salida (Asegurar 2 dígitos: 00, 01, ..., 09, 10, ...)
+//     const h = String(horas).padStart(2, '0');
+//     const m = String(minutos).padStart(2, '0');
+//     const s = String(segundos).padStart(2, '0');
 
-    // 4. Construir la cadena de tiempo
-    const tiempoFormateado = `${h}:${m}:${s}`;
+//     // 4. Construir la cadena de tiempo
+//     const tiempoFormateado = `${h}:${m}:${s}`;
 
-    // 5. Mostrar en el HTML
-    let contadorJuego = document.getElementById('contadorJuego');
-    if (contadorJuego) {
-        contadorJuego.innerHTML = tiempoFormateado;
-    }
-}
+//     // 5. Mostrar en el HTML
+//     let contadorJuego = document.getElementById('contadorJuego');
+//     if (contadorJuego) {
+//         contadorJuego.innerHTML = tiempoFormateado;
+//     }
+// }
