@@ -1,10 +1,11 @@
 import {segundosJuego} from "./cronometro.js";
 import {comprobarPuntuacion, ordenarPuntuaciones, mostrarPuntuaciones} from "./puntuaciones.js";
+import { pedirPalabras} from "./palabras.js";
 
 var origenX;
 var origenY;
 export var palabra;
-export var palabras = ["perro"];
+export var palabras = await pedirPalabras(2);
 var tableroBloqueado = false;
 var ratonPulsado = false;
 var anteriorX = 0; 
