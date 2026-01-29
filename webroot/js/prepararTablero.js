@@ -167,6 +167,7 @@ export function posicionarPalabra(palabra) {
 export function dibujarTablero(celdas) {
 
     let tabla = document.createElement("table")
+    tabla.setAttribute("translate","no");
 
     for (let i = 0; i < celdas.length; i++) {
         let fila = document.createElement("tr");
